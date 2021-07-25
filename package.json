@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "@babel/preset-react": "^7.13.13",
-        "axios": "^0.21",
+        "axios": "^0.21.1",
         "bootstrap": "^4.6.0",
         "jquery": "^3.6",
         "laravel-mix": "^6.0.25",
@@ -20,7 +20,16 @@
         "postcss": "^8.1.14",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "resolve-url-loader": "^4.0.0",
         "sass": "^1.32.11",
         "sass-loader": "^11.0.1"
+    },
+    "dependencies": {
+        "@fontsource/comfortaa": "^4.5.0",
+        "@fontsource/montserrat": "^4.5.0",
+        "@material-ui/core": "^4.12.2",
+        "@material-ui/icons": "^4.11.2",
+        "body-scroll-lock": "^4.0.0-beta.0",
+        "react-router-dom": "^5.2.0"
     }
 }

@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'mongodb'),
 
     /*
     |--------------------------------------------------------------------------
@@ -91,6 +91,12 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'dsn' => env('DB_URI', 'mongodb+srv://citcs-it1:citcs-it1-admin@clusterpok.cpjbv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'),
+            'database' => 'projectok-db',
+        ],
+
     ],
 
     /*
@@ -141,7 +147,7 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
-
+        
     ],
 
 ];

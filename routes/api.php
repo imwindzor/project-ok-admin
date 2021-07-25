@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +18,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//TEST ROUTE
+Route::resource('test', TestController::class, );
+
+//ROUTE FOR AUTH
+Route::post('auth/login', [LoginController::class, 'login']);
+
+//ROUTE FOR ADMIN
+Route::resource('admins', AdminController::class);
+
