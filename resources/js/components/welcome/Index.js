@@ -56,8 +56,15 @@ const Home = () => {
                                         className={classes.greenText}
                                         component="span"
                                     >
-                                        Here, you can generate charts and
-                                        monitor individuals
+                                        Here, you can filter results and monitor
+                                        individuals
+                                    </Typography>
+                                    <br />
+                                    <Typography
+                                        className={classes.greenText}
+                                        component="span"
+                                    >
+                                        Register and Login to start.
                                     </Typography>
                                 </center>
                             </Grid>

@@ -138,7 +138,7 @@ function HomeBanner() {
 
                         <CustomButton type="submit" background="secondary">
                             <NearMeIcon />
-                            Filter
+                            &nbsp; Filter
                         </CustomButton>
                     </Grid>
                 </Container>

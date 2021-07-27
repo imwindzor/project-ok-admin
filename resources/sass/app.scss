@@ -364,3 +364,26 @@ body {
 .MuiFormControl-fullWidth {
     background-color: white;
 }
+
+.table-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 2% 5% 2% 0;
+}
+
+.table-filters {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-left: 5%;
+    margin-top: 2%;
+
+    .filter-text {
+        margin-top: 5%;
+    }
+}
+
+.MuiFormHelperText-root {
+    font-size: 16px;
+}

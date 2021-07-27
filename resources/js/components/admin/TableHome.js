@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,10 +8,28 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import Grid from "@material-ui/core/Grid";
+import {
+    Grid,
+    Typography,
+    FormControl,
+    NativeSelect,
+    FormHelperText,
+} from "@material-ui/core";
+import { CustomButton } from "../../material-ui/styles";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
+import PrintIcon from "@material-ui/icons/Print";
+import RefreshIcon from "@material-ui/icons/Refresh";
+
 const columns = [
     { id: "number", label: "No.", minWidth: 170 },
-    { id: "id_number", label: "ID Number", minWidth: 100 },
+    {
+        id: "university",
+        label: "University",
+        minWidth: 170,
+        align: "right",
+        format: (value) => value.toLocaleString("en-US"),
+    },
+    { id: "id_number", label: "ID Number", minWidth: 170, align: "right" },
     {
         id: "name",
         label: "Name",
@@ -33,40 +51,50 @@ const columns = [
         align: "right",
         format: (value) => value.toFixed(2),
     },
+    {
+        id: "counsellor",
+        label: "Consulted By",
+        minWidth: 170,
+        align: "right",
+        format: (value) => value.toFixed(2),
+    },
 ];
 
 function createData(name, code, population, size) {
-    const density = population / size;
-    return { name, code, population, size, density };
+    return { name, code, population, size };
 }
 
-const rows = [
-    createData("India", "IN", 1324171354, 3287263),
-    createData("China", "CN", 1403500365, 9596961),
-    createData("Italy", "IT", 60483973, 301340),
-    createData("United States", "US", 327167434, 9833520),
-    createData("Canada", "CA", 37602103, 9984670),
-    createData("Australia", "AU", 25475400, 7692024),
-    createData("Germany", "DE", 83019200, 357578),
-    createData("Ireland", "IE", 4857000, 70273),
-    createData("Mexico", "MX", 126577691, 1972550),
-    createData("Japan", "JP", 126317000, 377973),
-    createData("France", "FR", 67022000, 640679),
-    createData("United Kingdom", "GB", 67545757, 242495),
-    createData("Russia", "RU", 146793744, 17098246),
-    createData("Nigeria", "NG", 200962417, 923768),
-    createData("Brazil", "BR", 210147125, 8515767),
-];
+// Dito i-connect yung db ng students/counsellors
+const rows = [createData("Sample", "N/A", 1324171354, 3287263)];
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%",
-        margin: "5%",
+        margin: "2% 5% 0 5%",
     },
     container: {
         maxHeight: 440,
     },
-});
+    formControl: {
+        margin: theme.spacing(2),
+        minWidth: 200,
+    },
+    selectEmpty: {
+        marginTop: theme.spacing(2),
+        fontSize: 20,
+    },
+}));
+
+const StyledTableCell = withStyles((theme) => ({
+    head: {
+        backgroundColor: "#289672",
+        color: "white",
+        fontSize: 16,
+    },
+    body: {
+        fontSize: 20,
+    },
+}))(TableCell);
 
 export default function TableHome() {
     const classes = useStyles();
@@ -83,70 +111,121 @@ export default function TableHome() {
     };
 
     return (
-        <Grid container alignItems="center">
-            <Paper className={classes.root}>
-                <TableContainer className={classes.container}>
-                    <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                        style={{ minWidth: column.minWidth }}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows
-                                .slice(
-                                    page * rowsPerPage,
-                                    page * rowsPerPage + rowsPerPage
-                                )
-                                .map((row) => {
-                                    return (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={row.code}
+        <>
+            <Grid container alignItems="center">
+                <Grid className="table-filters">
+                    <Typography variant="h6" className="filter-text">
+                        Filter results by:
+                    </Typography>
+                    <FormControl className={classes.formControl}>
+                        <NativeSelect
+                            name="age"
+                            className={classes.selectEmpty}
+                            inputProps={{ "aria-label": "age" }}
+                        >
+                            <option value="">18-20</option>
+                            <option value="">21-22</option>
+                            <option value="">23-25</option>
+                            <option value="">25 above</option>
+                        </NativeSelect>
+                        <FormHelperText>Filter results by Age</FormHelperText>
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                        <NativeSelect
+                            name="age"
+                            className={classes.selectEmpty}
+                            inputProps={{ "aria-label": "age" }}
+                        >
+                            <option value="">Male</option>
+                            <option value="">Female</option>
+                        </NativeSelect>
+                        <FormHelperText>
+                            Filter results by Gender
+                        </FormHelperText>
+                    </FormControl>
+                </Grid>
+                <CustomButton type="submit" background="primary">
+                    <RefreshIcon />
+                    &nbsp; Refresh
+                </CustomButton>
+                <Paper className={`${classes.root} ${classes.body}`}>
+                    <TableContainer className={classes.container}>
+                        <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                    {columns.map((column) => (
+                                        <StyledTableCell
+                                            key={column.id}
+                                            align={column.align}
+                                            style={{
+                                                minWidth: column.minWidth,
+                                            }}
                                         >
-                                            {columns.map((column) => {
-                                                const value = row[column.id];
-                                                return (
-                                                    <TableCell
-                                                        key={column.id}
-                                                        align={column.align}
-                                                    >
-                                                        {column.format &&
-                                                        typeof value ===
-                                                            "number"
-                                                            ? column.format(
-                                                                  value
-                                                              )
-                                                            : value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
-            </Paper>
-        </Grid>
+                                            {column.label}
+                                        </StyledTableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows
+                                    .slice(
+                                        page * rowsPerPage,
+                                        page * rowsPerPage + rowsPerPage
+                                    )
+                                    .map((row) => {
+                                        return (
+                                            <TableRow
+                                                hover
+                                                role="checkbox"
+                                                tabIndex={-1}
+                                                key={row.code}
+                                            >
+                                                {columns.map((column) => {
+                                                    const value =
+                                                        row[column.id];
+                                                    return (
+                                                        <StyledTableCell
+                                                            key={column.id}
+                                                            align={column.align}
+                                                        >
+                                                            {column.format &&
+                                                            typeof value ===
+                                                                "number"
+                                                                ? column.format(
+                                                                      value
+                                                                  )
+                                                                : value}
+                                                        </StyledTableCell>
+                                                    );
+                                                })}
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[10, 25, 100]}
+                        component="div"
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                </Paper>
+            </Grid>
+            <Grid containter className="table-btn">
+                <CustomButton background="secondary">
+                    <PrintIcon />
+                    &nbsp; Print
+                </CustomButton>
+                &nbsp; &nbsp;
+                <CustomButton background="primary">
+                    <SaveAltIcon />
+                    &nbsp; Save as
+                </CustomButton>
+            </Grid>
+        </>
     );
 }
