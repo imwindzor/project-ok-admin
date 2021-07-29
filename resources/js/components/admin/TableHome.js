@@ -18,10 +18,10 @@ import {
 import { CustomButton } from "../../material-ui/styles";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import PrintIcon from "@material-ui/icons/Print";
-import RefreshIcon from "@material-ui/icons/Refresh";
+import { CSVLink } from "react-csv";
 
 const columns = [
-    { id: "number", label: "No.", minWidth: 170 },
+    { id: "number", label: "No.", minWidth: 50 },
     {
         id: "university",
         label: "University",
@@ -40,7 +40,7 @@ const columns = [
     {
         id: "age",
         label: "Age",
-        minWidth: 170,
+        minWidth: 50,
         align: "right",
         format: (value) => value.toLocaleString("en-US"),
     },
@@ -60,12 +60,94 @@ const columns = [
     },
 ];
 
-function createData(name, code, population, size) {
-    return { name, code, population, size };
+function createData(
+    number,
+    university,
+    id_number,
+    name,
+    age,
+    gender,
+    counsellor
+) {
+    return { number, university, id_number, name, age, gender, counsellor };
 }
 
 // Dito i-connect yung db ng students/counsellors
-const rows = [createData("Sample", "N/A", 1324171354, 3287263)];
+const rows = [
+    createData(
+        1,
+        "Sample University",
+        1324171354,
+        "Juan Dela Cruz",
+        18,
+        "Male",
+        "John Doe"
+    ),
+    createData(
+        2,
+        "Sample University",
+        1324171354,
+        "Juan Dela Cruz",
+        18,
+        "Male",
+        "John Doe"
+    ),
+    createData(
+        3,
+        "Sample University",
+        1324171354,
+        "Juan Dela Cruz",
+        18,
+        "Male",
+        "John Doe"
+    ),
+    createData(
+        4,
+        "Sample University",
+        1324171354,
+        "Juan Dela Cruz",
+        18,
+        "Male",
+        "John Doe"
+    ),
+];
+
+const headers = [
+    {
+        label: "No.",
+        key: "number",
+    },
+    {
+        label: "University",
+        key: "university",
+    },
+    {
+        label: "ID Number",
+        key: "id_number",
+    },
+    {
+        label: "Name",
+        key: "name",
+    },
+    {
+        label: "Age",
+        key: "age",
+    },
+    {
+        label: "Gender",
+        key: "gender",
+    },
+    {
+        label: "Counsellor",
+        key: "counsellor",
+    },
+];
+
+const csvReport = {
+    filename: "Projectok-admin.csv",
+    headers: headers,
+    data: rows,
+};
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -144,9 +226,8 @@ export default function TableHome() {
                         </FormHelperText>
                     </FormControl>
                 </Grid>
-                <CustomButton type="submit" background="primary">
-                    <RefreshIcon />
-                    &nbsp; Refresh
+                <CustomButton type="submit" background="secondary">
+                    Search
                 </CustomButton>
                 <Paper className={`${classes.root} ${classes.body}`}>
                     <TableContainer className={classes.container}>
@@ -221,10 +302,12 @@ export default function TableHome() {
                     &nbsp; Print
                 </CustomButton>
                 &nbsp; &nbsp;
-                <CustomButton background="primary">
-                    <SaveAltIcon />
-                    &nbsp; Save as
-                </CustomButton>
+                <CSVLink {...csvReport} style={{ textDecoration: "none" }}>
+                    <CustomButton background="primary">
+                        <SaveAltIcon />
+                        &nbsp; Save as
+                    </CustomButton>
+                </CSVLink>
             </Grid>
         </>
     );
