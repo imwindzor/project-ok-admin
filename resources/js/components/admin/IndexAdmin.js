@@ -38,6 +38,7 @@ import {
 import NearMeIcon from "@material-ui/icons/NearMe";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import TableHome from "./TableHome";
+import SearchIcon from "@material-ui/icons/Search";
 
 function HomeBanner() {
     const history = useHistory();
@@ -137,8 +138,8 @@ function HomeBanner() {
                         <br />
 
                         <CustomButton type="submit" background="secondary">
-                            <NearMeIcon />
-                            &nbsp; Filter
+                            <SearchIcon />
+                            &nbsp; Search
                         </CustomButton>
                     </Grid>
                 </Container>

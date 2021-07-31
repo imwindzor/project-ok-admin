@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -19,103 +19,66 @@ import { CustomButton } from "../../material-ui/styles";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import PrintIcon from "@material-ui/icons/Print";
 import { CSVLink } from "react-csv";
+import MaterialTable, { MTableBody } from "material-table";
+import { Checkbox, Select, MenuItem } from "@material-ui/core";
+import { tableIcons } from "../material-table/table-icons";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
-const columns = [
-    { id: "number", label: "No.", minWidth: 50 },
-    {
-        id: "university",
-        label: "University",
-        minWidth: 170,
-        align: "right",
-        format: (value) => value.toLocaleString("en-US"),
-    },
-    { id: "id_number", label: "ID Number", minWidth: 170, align: "right" },
-    {
-        id: "name",
-        label: "Name",
-        minWidth: 170,
-        align: "right",
-        format: (value) => value.toLocaleString("en-US"),
-    },
-    {
-        id: "age",
-        label: "Age",
-        minWidth: 50,
-        align: "right",
-        format: (value) => value.toLocaleString("en-US"),
-    },
-    {
-        id: "gender",
-        label: "Gender",
-        minWidth: 170,
-        align: "right",
-        format: (value) => value.toFixed(2),
-    },
-    {
-        id: "counsellor",
-        label: "Consulted By",
-        minWidth: 170,
-        align: "right",
-        format: (value) => value.toFixed(2),
-    },
-];
-
-function createData(
-    number,
-    university,
-    id_number,
-    name,
-    age,
-    gender,
-    counsellor
-) {
-    return { number, university, id_number, name, age, gender, counsellor };
-}
-
-// Dito i-connect yung db ng students/counsellors
+// database
 const rows = [
-    createData(
-        1,
-        "Sample University",
-        1324171354,
-        "Juan Dela Cruz",
-        18,
-        "Male",
-        "John Doe"
-    ),
-    createData(
-        2,
-        "Sample University",
-        1324171354,
-        "Juan Dela Cruz",
-        18,
-        "Male",
-        "John Doe"
-    ),
-    createData(
-        3,
-        "Sample University",
-        1324171354,
-        "Juan Dela Cruz",
-        18,
-        "Male",
-        "John Doe"
-    ),
-    createData(
-        4,
-        "Sample University",
-        1324171354,
-        "Juan Dela Cruz",
-        18,
-        "Male",
-        "John Doe"
-    ),
+    {
+        id: 1,
+        university: "Sample",
+        id_number: 18031274,
+        name: "Neeraj",
+        age: 23,
+        gender: "Male",
+        counsellor: "John Doe",
+    },
+    {
+        id: 2,
+        university: "Sample",
+        id_number: 18031274,
+        name: "Neeraj",
+        age: 23,
+        gender: "Male",
+        counsellor: "John Doe",
+    },
+    {
+        id: 3,
+        university: "Sample",
+        id_number: 18031274,
+        name: "Neeraj",
+        age: 21,
+        gender: "Male",
+        counsellor: "John Doe",
+    },
+    {
+        id: 4,
+        university: "Sample",
+        id_number: 18031274,
+        name: "Neeraj",
+        age: 18,
+        gender: "Female",
+        counsellor: "John Doe",
+    },
+    {
+        id: 5,
+        university: "Sample",
+        id_number: 18031274,
+        name: "Neeraj",
+        age: 19,
+        gender: "Female",
+        counsellor: "John Doe",
+    },
 ];
 
+// for csv exporting
 const headers = [
     {
         label: "No.",
-        key: "number",
+        key: "id",
     },
     {
         label: "University",
@@ -149,163 +112,194 @@ const csvReport = {
     data: rows,
 };
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: "100%",
-        margin: "2% 5% 0 5%",
-    },
-    container: {
-        maxHeight: 440,
-    },
-    formControl: {
-        margin: theme.spacing(2),
-        minWidth: 200,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-        fontSize: 20,
-    },
-}));
-
-const StyledTableCell = withStyles((theme) => ({
-    head: {
-        backgroundColor: "#289672",
-        color: "white",
-        fontSize: 16,
-    },
-    body: {
-        fontSize: 20,
-    },
-}))(TableCell);
-
 export default function TableHome() {
-    const classes = useStyles();
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    // const classes = useStyles();
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+    /* Experimenting age range filtering */
+
+    // const firstOption = Array.from(Array(22).keys());
+    // const result = [...firstOption];
+    // console.log(result);
+
+    // const range = (_start_, _end_) => {
+    //     return new Array(_end_ - _start_ + 1)
+    //         .fill(undefined)
+    //         .map((_, k) => k + _start_);
+    // };
+    // for (Array of range(18, 21)) {
+    //     return Array;
+    // }
+
+    const exportPDF = () => {
+        const unit = "pt";
+        const size = "A4"; // Use A1, A2, A3 or A4
+        const orientation = "portrait"; // portrait or landscape
+
+        const marginLeft = 40;
+        const doc = new jsPDF(orientation, unit, size);
+
+        doc.setFontSize(15);
+
+        const title = "University of the Cordilleras"; // to edit
+        const headers = [
+            [
+                "Id",
+                "University",
+                "ID Number",
+                "Name",
+                "Age",
+                "Gender",
+                "Counsellor",
+            ],
+        ];
+
+        const data = rows.map((elt) => [
+            elt.id,
+            elt.university,
+            elt.id_number,
+            elt.name,
+            elt.age,
+            elt.gender,
+            elt.counsellor,
+        ]);
+
+        let content = {
+            startY: 50,
+            head: headers,
+            body: data,
+        };
+
+        doc.text(title, marginLeft, 40);
+        doc.autoTable(content);
+        doc.save(`Filtered Report of ${title}.pdf`);
     };
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
+    const [filteredData, setFilteredData] = useState(rows);
+    const [filter, setFilter] = useState(true);
+    const [age, setAge] = useState("all");
+    const [gender, setGender] = useState("all");
+    const columns = [
+        { title: "ID", field: "id" },
+        { title: "University", field: "university" },
+        { title: "ID Number", field: "id_number" },
+        { title: "Name", field: "name" },
+        { title: "Age", field: "age" },
+        { title: "Gender", field: "gender" },
+        { title: "Consulted By", field: "counsellor" },
+    ];
+    const handleChange = () => {
+        setFilter(!filter);
     };
-
+    useEffect(() => {
+        setFilteredData(
+            age === "all" ? rows : rows.filter((dt) => dt.age === age)
+        );
+    }, [age]);
+    useEffect(() => {
+        setFilteredData(
+            gender === "all" ? rows : rows.filter((dt) => dt.gender === gender)
+        );
+    }, [gender]);
     return (
         <>
             <Grid container alignItems="center">
-                <Grid className="table-filters">
-                    <Typography variant="h6" className="filter-text">
-                        Filter results by:
-                    </Typography>
-                    <FormControl className={classes.formControl}>
-                        <NativeSelect
-                            name="age"
-                            className={classes.selectEmpty}
-                            inputProps={{ "aria-label": "age" }}
-                        >
-                            <option value="">18-20</option>
-                            <option value="">21-22</option>
-                            <option value="">23-25</option>
-                            <option value="">25 above</option>
-                        </NativeSelect>
-                        <FormHelperText>Filter results by Age</FormHelperText>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <NativeSelect
-                            name="age"
-                            className={classes.selectEmpty}
-                            inputProps={{ "aria-label": "age" }}
-                        >
-                            <option value="">Male</option>
-                            <option value="">Female</option>
-                        </NativeSelect>
-                        <FormHelperText>
-                            Filter results by Gender
-                        </FormHelperText>
-                    </FormControl>
-                </Grid>
-                <CustomButton type="submit" background="secondary">
-                    Search
-                </CustomButton>
-                <Paper className={`${classes.root} ${classes.body}`}>
-                    <TableContainer className={classes.container}>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    {columns.map((column) => (
-                                        <StyledTableCell
-                                            key={column.id}
-                                            align={column.align}
-                                            style={{
-                                                minWidth: column.minWidth,
-                                            }}
-                                        >
-                                            {column.label}
-                                        </StyledTableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows
-                                    .slice(
-                                        page * rowsPerPage,
-                                        page * rowsPerPage + rowsPerPage
-                                    )
-                                    .map((row) => {
-                                        return (
-                                            <TableRow
-                                                hover
-                                                role="checkbox"
-                                                tabIndex={-1}
-                                                key={row.code}
-                                            >
-                                                {columns.map((column) => {
-                                                    const value =
-                                                        row[column.id];
-                                                    return (
-                                                        <StyledTableCell
-                                                            key={column.id}
-                                                            align={column.align}
-                                                        >
-                                                            {column.format &&
-                                                            typeof value ===
-                                                                "number"
-                                                                ? column.format(
-                                                                      value
-                                                                  )
-                                                                : value}
-                                                        </StyledTableCell>
-                                                    );
-                                                })}
-                                            </TableRow>
-                                        );
-                                    })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[10, 25, 100]}
-                        component="div"
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                </Paper>
+                <MaterialTable
+                    icons={tableIcons}
+                    title="University of the Cordilleras" // ito sana yung pagka pindot ng filter button
+                    data={filteredData}
+                    columns={columns}
+                    options={{
+                        filtering: filter,
+                        headerStyle: {
+                            backgroundColor: "#289672",
+                            color: "white",
+                            fontSize: 20,
+                        },
+                        rowStyle: {
+                            fontSize: 20,
+                        },
+                    }}
+                    actions={[
+                        {
+                            icon: () => (
+                                <>
+                                    <h6>Filter table</h6>
+                                    <Checkbox
+                                        checked={filter}
+                                        onChange={handleChange}
+                                        inputProps={{
+                                            "aria-label": "primary checkbox",
+                                        }}
+                                    />
+                                </>
+                            ),
+                            tooltip: "Hide/Show Filter option",
+                            isFreeAction: true,
+                        },
+                        {
+                            icon: () => (
+                                <>
+                                    <h6>Filter by Age: </h6>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        style={{ width: 100 }}
+                                        value={age}
+                                        onChange={(e) => setAge(e.target.value)}
+                                    >
+                                        <MenuItem value={"all"}>All</MenuItem>
+                                        {/* WIP filtering by age */}
+                                        <MenuItem value={18}>18-21</MenuItem>
+                                        <MenuItem value={23}>23-25</MenuItem>
+                                        <MenuItem value={26}>25-above</MenuItem>
+                                    </Select>
+                                </>
+                            ),
+
+                            tooltip: "Filter Age",
+                            isFreeAction: true,
+                        },
+                        {
+                            icon: () => (
+                                <>
+                                    <h6>Filter by Gender: </h6>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        style={{ width: 100 }}
+                                        value={gender}
+                                        onChange={(e) =>
+                                            setGender(e.target.value)
+                                        }
+                                    >
+                                        <MenuItem value={"all"}>All</MenuItem>
+                                        <MenuItem value={"Male"}>Male</MenuItem>
+                                        <MenuItem value={"Female"}>
+                                            Female
+                                        </MenuItem>
+                                    </Select>
+                                </>
+                            ),
+
+                            tooltip: "Filter Gender",
+                            isFreeAction: true,
+                        },
+                    ]}
+                />
             </Grid>
-            <Grid containter className="table-btn">
-                <CustomButton background="secondary">
-                    <PrintIcon />
-                    &nbsp; Print
+            <Grid container className="table-btn">
+                <CustomButton
+                    background="secondary"
+                    onClick={() => exportPDF()}
+                >
+                    <SaveAltIcon />
+                    &nbsp; Save as PDF
                 </CustomButton>
                 &nbsp; &nbsp;
                 <CSVLink {...csvReport} style={{ textDecoration: "none" }}>
                     <CustomButton background="primary">
                         <SaveAltIcon />
-                        &nbsp; Save as
+                        &nbsp; Save as CSV
                     </CustomButton>
                 </CSVLink>
             </Grid>
