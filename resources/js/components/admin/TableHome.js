@@ -8,34 +8,15 @@ import {
     Tooltip,
     Legend,
 } from "recharts";
-
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import {
-    Grid,
-    Typography,
-    FormControl,
-    NativeSelect,
-    FormHelperText,
-} from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { CustomButton } from "../../material-ui/styles";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
-import PrintIcon from "@material-ui/icons/Print";
 import { CSVLink } from "react-csv";
 import MaterialTable, { MTableBody } from "material-table";
 import { Checkbox, Select, MenuItem } from "@material-ui/core";
 import { tableIcons } from "../material-table/table-icons";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
-// const maleCount = 0;
 
 // database
 const rowsArray = [
@@ -124,6 +105,8 @@ const csvReport = {
     data: rowsArray,
 };
 
+// DATA FOR CHARTS
+
 /* GENDER FILTERING */
 
 let maleCount = 0;
@@ -147,6 +130,9 @@ function femaleFilter(item) {
 }
 let feMaleResult = rowsArray.filter(femaleFilter);
 const females = feMaleResult.length;
+
+/* FILTERING UNIVERSITY */
+/* FILTERING AGE RANGE */
 
 /* CHART FROM TABLE */
 
