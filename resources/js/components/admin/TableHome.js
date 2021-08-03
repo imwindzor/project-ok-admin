@@ -1,4 +1,14 @@
 import React, { useState, useEffect } from "react";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+} from "recharts";
+
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -25,11 +35,13 @@ import { tableIcons } from "../material-table/table-icons";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
+// const maleCount = 0;
+
 // database
-const rows = [
+const rowsArray = [
     {
         id: 1,
-        university: "Sample",
+        university: "University of the Cordilleras",
         id_number: 18031274,
         name: "Neeraj",
         age: 23,
@@ -38,7 +50,7 @@ const rows = [
     },
     {
         id: 2,
-        university: "Sample",
+        university: "University of the Philippines Baguio",
         id_number: 18031274,
         name: "Neeraj",
         age: 23,
@@ -60,7 +72,7 @@ const rows = [
         id_number: 18031274,
         name: "Neeraj",
         age: 18,
-        gender: "Female",
+        gender: "Male",
         counsellor: "John Doe",
     },
     {
@@ -74,7 +86,7 @@ const rows = [
     },
 ];
 
-// for csv exporting
+// CSV REPORTING
 const headers = [
     {
         label: "No.",
@@ -109,31 +121,54 @@ const headers = [
 const csvReport = {
     filename: "Projectok-admin.csv",
     headers: headers,
-    data: rows,
+    data: rowsArray,
 };
 
+/* GENDER FILTERING */
+
+let maleCount = 0;
+function maleFilter(item) {
+    if (item.gender === "Male") {
+        return true;
+    }
+    maleCount++;
+    return false;
+}
+let maleResult = rowsArray.filter(maleFilter);
+const males = maleResult.length;
+
+let femaleCount = 0;
+function femaleFilter(item) {
+    if (item.gender === "Female") {
+        return true;
+    }
+    femaleCount++;
+    return false;
+}
+let feMaleResult = rowsArray.filter(femaleFilter);
+const females = feMaleResult.length;
+
+/* CHART FROM TABLE */
+
+const chartData = [
+    {},
+    {
+        name: "Gender",
+        male: males,
+        female: females,
+        amt: 400,
+    },
+    {},
+];
+
 export default function TableHome() {
-    // const classes = useStyles();
+    /* wala pa 'tong age range filtering */
 
-    /* Experimenting age range filtering */
-
-    // const firstOption = Array.from(Array(22).keys());
-    // const result = [...firstOption];
-    // console.log(result);
-
-    // const range = (_start_, _end_) => {
-    //     return new Array(_end_ - _start_ + 1)
-    //         .fill(undefined)
-    //         .map((_, k) => k + _start_);
-    // };
-    // for (Array of range(18, 21)) {
-    //     return Array;
-    // }
-
+    // EXPORTING TABLE PDF
     const exportPDF = () => {
         const unit = "pt";
-        const size = "A4"; // Use A1, A2, A3 or A4
-        const orientation = "portrait"; // portrait or landscape
+        const size = "A4";
+        const orientation = "portrait";
 
         const marginLeft = 40;
         const doc = new jsPDF(orientation, unit, size);
@@ -153,7 +188,7 @@ export default function TableHome() {
             ],
         ];
 
-        const data = rows.map((elt) => [
+        const data = rowsArray.map((elt) => [
             elt.id,
             elt.university,
             elt.id_number,
@@ -174,7 +209,7 @@ export default function TableHome() {
         doc.save(`Filtered Report of ${title}.pdf`);
     };
 
-    const [filteredData, setFilteredData] = useState(rows);
+    const [filteredData, setFilteredData] = useState(rowsArray);
     const [filter, setFilter] = useState(true);
     const [age, setAge] = useState("all");
     const [gender, setGender] = useState("all");
@@ -192,14 +227,17 @@ export default function TableHome() {
     };
     useEffect(() => {
         setFilteredData(
-            age === "all" ? rows : rows.filter((dt) => dt.age === age)
+            age === "all" ? rowsArray : rowsArray.filter((dt) => dt.age === age)
         );
     }, [age]);
     useEffect(() => {
         setFilteredData(
-            gender === "all" ? rows : rows.filter((dt) => dt.gender === gender)
+            gender === "all"
+                ? rowsArray
+                : rowsArray.filter((dt) => dt.gender === gender)
         );
     }, [gender]);
+
     return (
         <>
             <Grid container alignItems="center">
@@ -302,6 +340,32 @@ export default function TableHome() {
                         &nbsp; Save as CSV
                     </CustomButton>
                 </CSVLink>
+            </Grid>
+            <Grid container className="charts">
+                <Typography variant="h5">
+                    Filtered results based on charts
+                </Typography>
+                <br />
+                <br />
+                <BarChart
+                    width={600}
+                    height={300}
+                    data={chartData}
+                    margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                    }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="male" fill="#289672" />
+                    <Bar dataKey="female" fill="#e9d700" />
+                </BarChart>
             </Grid>
         </>
     );
