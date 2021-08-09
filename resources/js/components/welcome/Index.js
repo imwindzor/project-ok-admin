@@ -31,13 +31,12 @@ const Home = () => {
                         <Grid
                             className="grid-padding"
                             container
-                            item
                             direction="column"
                             alignItems="center"
                         >
                             <Grid item>
                                 <Typography
-                                    className={`${classes.greenText} ${classes.alignText} ${classes.margin}`}
+                                    className={`${classes.greenText} ${classes.margin}`}
                                     variant="h2"
                                 >
                                     Online Kumustahan
@@ -66,6 +65,16 @@ const Home = () => {
                                     >
                                         Register and Login to start.
                                     </Typography>
+                                    <br />
+                                    <br />
+                                    <Grid item>
+                                        <em style={{ color: "red" }}>
+                                            Note: Only CHED Representative can
+                                            register University Admin.
+                                            Registered university admins can
+                                            proceed to login.
+                                        </em>
+                                    </Grid>
                                 </center>
                             </Grid>
                         </Grid>
@@ -83,8 +92,14 @@ const Index = () => {
         location = {
             pathname: "/admin",
         };
+    } else if (auth.user.isLoggedIn && auth.user.data._type === "adminched") {
+        location = {
+            pathname: "/adminched",
+        };
     } else {
-        ("Failed logging in. Please try again");
+        location = {
+            pathname: "/",
+        };
     }
 
     return (

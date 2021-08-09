@@ -3,39 +3,14 @@ import { useHistory } from "react-router-dom";
 import {
     Box,
     Grid,
-    ThemeProvider,
     Container,
-    Card,
-    CardContent,
-    CardHeader,
-    Button,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    IconButton,
-    Dialog,
-    CssBaseline,
     Typography,
-    DialogActions,
-    Snackbar,
     FormControl,
     InputLabel,
     Select,
     MenuItem,
 } from "@material-ui/core";
-import { AddIcCall } from "@material-ui/icons";
-import {
-    theme,
-    customStyles,
-    CustomButton,
-    DialogTitle,
-    DialogContent,
-} from "../../material-ui/styles";
-import NearMeIcon from "@material-ui/icons/NearMe";
+import { customStyles, CustomButton } from "../../material-ui/styles";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import TableHome from "./TableHome";
 import SearchIcon from "@material-ui/icons/Search";
@@ -62,7 +37,7 @@ function HomeBanner() {
                 <Container>
                     <Grid container alignItems="center" direction="column">
                         <Typography variant="h2" className={classes.whiteText}>
-                            Generate Report
+                            Generate Report (ched)
                         </Typography>
                         <Typography variant="h6" className={classes.whiteText}>
                             Filter reports from different Universities

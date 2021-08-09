@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\AdminChed;
 
 class LoginController extends Controller
 {
@@ -31,7 +32,7 @@ class LoginController extends Controller
 
             $user = Auth::user();
             $type = $user->type;
-            $user = $type == "admin" ?  Admin::where('_id', $user->admin_id)->first() : "Failed loggin in";
+            $user = $type == "admin" ? Admin::where('_id', $user->admin_id)->first() :  AdminChed::where('_id', $user->adminched_id)->first();
 
             return response()->json([
                 'success' => true,

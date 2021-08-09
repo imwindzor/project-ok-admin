@@ -94,13 +94,13 @@ const RegisterForm = () => {
         e.preventDefault();
         setOnSubmit(true);
 
-        let response = await auth.register(form);
+        let response = await auth.register(form); // registration is for univ admin only
         switch (response.status) {
             case 200:
                 if (response.data._type === "admin") {
                     history.push("/admin");
                 } else {
-                    history.push("/counsellor");
+                    history.push("/");
                 }
                 break;
             case 422:

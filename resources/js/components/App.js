@@ -12,10 +12,12 @@ import { AuthProvider } from "./auth/AuthProvider";
 import AuthReroute from "./auth/AuthReroute";
 import Header from "./Header";
 import Register from "./auth/Register";
+import LoginUniv from "./auth/LoginUniv";
 import Login from "./auth/Login";
 import Index from "./welcome/Index";
 import Footer from "./Footer";
 import Admin from "../components/admin/Admin";
+import UnivAdmin from "../components/admin/UnivAdmin";
 
 const AppRoute = () => {
     let location = useLocation();
@@ -28,8 +30,11 @@ const AppRoute = () => {
                 <Route exact path="/">
                     <Index />
                 </Route>
-                <AuthReroute path="/admin">
+                <AuthReroute path="/adminched">
                     <Admin />
+                </AuthReroute>
+                <AuthReroute path="/admin">
+                    <UnivAdmin />
                 </AuthReroute>
             </Switch>
             <Footer />
@@ -37,6 +42,7 @@ const AppRoute = () => {
             {background && (
                 <Route path="/admins/create" children={<Register />} />
             )}
+            {background && <Route path="/auth/univ" children={<LoginUniv />} />}
             {background && <Route path="/auth/login" children={<Login />} />}
         </>
     );

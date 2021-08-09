@@ -26,7 +26,7 @@ const useAuthProvider = () => {
 
     const login = async (form) => {
         try {
-            const response = await axios.post("/api/auth/login", form);
+            const response = await axios.post("/api/auth/login", form); // post in chedlogin
             if (response.status === 200) {
                 let userData = {
                     isLoggedIn: true,
@@ -40,6 +40,30 @@ const useAuthProvider = () => {
 
                 localStorage.setItem("user", JSON.stringify(userData));
                 setUser(userData);
+            }
+            return response;
+        } catch (error) {
+            return error.response;
+        }
+    };
+
+    const univ = async (form) => {
+        try {
+            const response = await axios.post("/api/auth/univ", form); // for univ login
+            if (response.status === 200) {
+                let userData = {
+                    isLoggedIn: true,
+                    data: {
+                        _id: response.data._id,
+                        _lastname: response.data._lastname,
+                        _firstname: response.data._firstname,
+                        _type: response.data._type,
+                    },
+                };
+
+                localStorage.setItem("user", JSON.stringify(userData));
+                setUser(userData);
+                console.log(response);
             }
             return response;
         } catch (error) {
@@ -82,6 +106,7 @@ const useAuthProvider = () => {
     return {
         user,
         login,
+        univ,
         register,
     };
 };

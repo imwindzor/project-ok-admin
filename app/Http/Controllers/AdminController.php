@@ -50,7 +50,7 @@ class AdminController extends Controller
 
             $user = Auth::user();
             $type = $user->type;
-            $user = $type == "admin" ?  Admin::where('_id', $user->admin_id)->first() : "Failed logging in";
+            $user = $type == "admin" ? Admin::where('_id', $user->admin_id)->first() : "Failed logging in";
 
             return response()->json([
                 'success' => true,

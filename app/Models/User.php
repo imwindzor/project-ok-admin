@@ -29,5 +29,10 @@ class User extends Authenticatable
         return $this->belongsTo(Admin::class, 'admin_id');
     }
 
+
+    public function adminched()
+    {
+        return $this->belongsTo(AdminChed::class, 'adminched_id');
+    }
     
 }

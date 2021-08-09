@@ -120,6 +120,7 @@ export const customStyles = makeStyles((theme) => ({
 
     margin: {
         marginTop: "40px",
+        textAlign: "center",
     },
 
     subText: {

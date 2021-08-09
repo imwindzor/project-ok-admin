@@ -79,13 +79,13 @@ const LoginForm = () => {
         setInputError(false);
         setOnSubmit(true);
 
-        let response = await auth.login(form);
+        let response = await auth.login(form); // login for ched
         switch (response.status) {
             case 200:
-                if (response.data._type === "admin") {
-                    history.push("/admin");
+                if (response.data._type === "adminched") {
+                    history.push("/adminched");
                 } else {
-                    history.push("/counsellor");
+                    history.push("/");
                 }
                 break;
             case 401:
@@ -112,8 +112,8 @@ const LoginForm = () => {
                             alignItems="center"
                         >
                             <Grid item>
-                                <Typography variant="h4" component="span">
-                                    Login
+                                <Typography variant="h5" component="span">
+                                    Login as CHED Admin
                                 </Typography>
                             </Grid>
                             <Grid item>

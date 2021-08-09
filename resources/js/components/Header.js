@@ -9,6 +9,9 @@ import {
     IconButton,
     Menu,
     MenuItem,
+    Modal,
+    Fade,
+    Backdrop,
 } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { useRouteMatch, Link, useHistory } from "react-router-dom";
@@ -16,6 +19,11 @@ import { AccountCircle } from "@material-ui/icons";
 import { useAuth } from "./auth/AuthProvider";
 import { theme, CustomButton } from "../material-ui/styles";
 import ProjectLogo from "../../../public/images/projectok-logo.svg";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
 
 const useStyle = makeStyles((theme) => ({
     logo: {
@@ -41,6 +49,15 @@ const useStyle = makeStyles((theme) => ({
     },
     gridItem: {
         padding: "0 4px",
+    },
+    modal: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    paper: {
+        backgroundColor: "white",
+        padding: "2% 7% 2% 7%",
     },
 }));
 
@@ -72,9 +89,9 @@ const Logo = () => {
         location = {
             pathname: "/admin",
         };
-    } else if (auth.user.isLoggedIn && auth.user._type === "counsellor") {
+    } else if (auth.user.isLoggedIn && auth.user._type === "adminched") {
         location = {
-            pathname: "/counsellor",
+            pathname: "/adminched",
         };
     } else {
         location = {
@@ -106,35 +123,104 @@ const LoginRegisterButtons = () => {
     let history = useHistory();
 
     const classes = useStyle();
+    const [open, setOpen] = React.useState(false);
 
-    return (
-        <Grid
-            container
-            item
-            direction="row"
-            justify="flex-end"
-            alignItems="center"
-        >
-            <Grid item className={classes.gridItem}>
-                {/* href={`${url}register`} */}
-                <Link
-                    to={{
-                        pathname: `/admins/create`,
-                        state: {
-                            background: {
-                                pathname: "/",
-                            },
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    // Radio
+    const [value, setValue] = React.useState("ched_admin");
+
+    const handleChange = (event) => {
+        setValue(event.target.value);
+    };
+
+    // console.log(value);
+
+    let proceed;
+    if (value === "ched_admin") {
+        proceed = (
+            <Link
+                to={{
+                    pathname: `/auth/login`,
+                    state: {
+                        background: {
+                            pathname: "/",
                         },
+                    },
+                }}
+                className={classes.linkRoute}
+            >
+                <CustomButton
+                    background="primary"
+                    onClick={handleClose}
+                    style={{
+                        width: "250px",
                     }}
-                    className={classes.linkRoute}
                 >
-                    <CustomButton>Register</CustomButton>
-                </Link>
-            </Grid>
-            <Grid item className={classes.gridItem}>
-                {/*href={`${url}login`}*/}
+                    Proceed
+                </CustomButton>
+            </Link>
+        );
+    } else {
+        proceed = (
+            <Link
+                to={{
+                    pathname: `/auth/univ`,
+                    state: {
+                        background: {
+                            pathname: "/",
+                        },
+                    },
+                }}
+                className={classes.linkRoute}
+            >
+                <CustomButton
+                    background="primary"
+                    onClick={handleClose}
+                    style={{
+                        width: "250px",
+                    }}
+                >
+                    Proceed
+                </CustomButton>
+            </Link>
+        );
+    }
+    return (
+        <>
+            <Grid
+                container
+                item
+                direction="row"
+                justify="flex-end"
+                alignItems="center"
+            >
+                <Grid item className={classes.gridItem}>
+                    {/* href={`${url}register`} */}
+                    <Link
+                        to={{
+                            pathname: `/admins/create`,
+                            state: {
+                                background: {
+                                    pathname: "/",
+                                },
+                            },
+                        }}
+                        className={classes.linkRoute}
+                    >
+                        <CustomButton>Register</CustomButton>
+                    </Link>
+                </Grid>
+                <Grid item className={classes.gridItem}>
+                    {/*href={`${url}login`}*/}
 
-                <Link
+                    {/* <Link
                     to={{
                         pathname: `/auth/login`,
                         state: {
@@ -144,11 +230,81 @@ const LoginRegisterButtons = () => {
                         },
                     }}
                     className={classes.linkRoute}
-                >
-                    <CustomButton background="primary">Login</CustomButton>
-                </Link>
+                > */}
+                    <CustomButton background="primary" onClick={handleOpen}>
+                        Login
+                    </CustomButton>
+                    {/* </Link> */}
+                    <Modal
+                        aria-labelledby="transition-modal-title"
+                        aria-describedby="transition-modal-description"
+                        className={classes.modal}
+                        open={open}
+                        onClose={handleClose}
+                        closeAfterTransition
+                        BackdropComponent={Backdrop}
+                        BackdropProps={{
+                            timeout: 500,
+                        }}
+                    >
+                        <Fade in={open}>
+                            <div className={classes.paper}>
+                                <h2
+                                    id="transition-modal-title"
+                                    style={{ color: "#289672" }}
+                                >
+                                    Login as
+                                </h2>
+                                <br />
+
+                                <FormControl component="fieldset">
+                                    {/* <FormLabel component="legend">
+                                        Gender
+                                    </FormLabel> */}
+                                    <RadioGroup
+                                        aria-label="admin"
+                                        name="admins"
+                                        value={value}
+                                        onChange={handleChange}
+                                    >
+                                        <FormControlLabel
+                                            value="ched_admin"
+                                            control={<Radio />}
+                                            label={
+                                                <Typography
+                                                    style={{
+                                                        fontSize: "1.5rem",
+                                                        color: "black",
+                                                    }}
+                                                >
+                                                    CHED Admin
+                                                </Typography>
+                                            }
+                                        />
+                                        <FormControlLabel
+                                            value="univ_admin"
+                                            control={<Radio />}
+                                            label={
+                                                <Typography
+                                                    style={{
+                                                        fontSize: "1.5rem",
+                                                        color: "black",
+                                                    }}
+                                                >
+                                                    University Admin
+                                                </Typography>
+                                            }
+                                        />
+                                        <br />
+                                        {proceed}
+                                    </RadioGroup>
+                                </FormControl>
+                            </div>
+                        </Fade>
+                    </Modal>
+                </Grid>
             </Grid>
-        </Grid>
+        </>
     );
 };
 
