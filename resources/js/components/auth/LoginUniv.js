@@ -80,7 +80,6 @@ const LoginFormUniv = () => {
         setOnSubmit(true);
 
         let response = await auth.univ(form);
-
         switch (response.status) {
             case 200:
                 if (response.data._type === "admin") {

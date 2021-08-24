@@ -6,6 +6,9 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminChedController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\CounselorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +30,11 @@ Route::post('auth/login', [LoginController::class, 'login']);
 //ROUTE FOR ADMIN
 Route::resource('admins', AdminController::class);
 
+//ROUTE FOR ADMINCHED
+Route::resource('adminsched', AdminChedController::class);
+
+//STUDENTS
+Route::get('student', [StudentController::class, 'index']);
+
+//COUNSELORS
+Route::get('counselor', [CounselorController::class, 'index']);

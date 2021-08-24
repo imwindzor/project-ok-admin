@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-// use App\Models\Student;
-// use App\Models\Counsellor;
 use App\Models\Admin;
 
 class AdminController extends Controller
@@ -15,6 +13,7 @@ class AdminController extends Controller
     {
         //
     }
+
     public function create()
     {
         //
@@ -28,9 +27,9 @@ class AdminController extends Controller
             'university' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', 'min:8'],
-            'password_confirmation' => ['required','same:password', 'min:8']
+            'password_confirmation' => ['required', 'same:password', 'min:8']
         ]);
-        
+
         $user = Admin::create([
             'last_name' => $request->last_name,
             'first_name' => $request->first_name,
@@ -50,7 +49,8 @@ class AdminController extends Controller
 
             $user = Auth::user();
             $type = $user->type;
-            $user = $type == "admin" ? Admin::where('_id', $user->admin_id)->first() : "Failed logging in";
+            $user = $type == "admin" ?  Admin::where('_id', $user->admin_id)->first() : "Error";
+
 
             return response()->json([
                 'success' => true,
@@ -60,6 +60,11 @@ class AdminController extends Controller
                 '_type' => $type,
             ], 200);
         }
+    }
+
+    public function showCounselorSchedule()
+    {
+        //
     }
 
     public function show($id)

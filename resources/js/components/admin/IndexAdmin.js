@@ -13,7 +13,9 @@ import {
 import { customStyles, CustomButton } from "../../material-ui/styles";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import TableHome from "./TableHome";
+// import { Charts } from "./TableHome";
 import SearchIcon from "@material-ui/icons/Search";
+import ChartsImg from "../../../../public/images/Analytics-bro.svg";
 
 function HomeBanner() {
     const history = useHistory();
@@ -31,13 +33,20 @@ function HomeBanner() {
         setOpen(false);
     };
 
+    const [value, setValue] = useState("");
+    const handleChange = (e) => setValue(e.target.value);
+
+    const [click, setClick] = useState("");
+    const handleClick = (e) => setClick(e.target.value);
+    console.log(click);
+
     return (
         <>
             <Box id="admin-home" className={classes.homeMargin}>
                 <Container>
                     <Grid container alignItems="center" direction="column">
                         <Typography variant="h2" className={classes.whiteText}>
-                            Generate Report (ched)
+                            Generate Reports
                         </Typography>
                         <Typography variant="h6" className={classes.whiteText}>
                             Filter reports from different Universities
@@ -60,8 +69,7 @@ function HomeBanner() {
                                 id="university"
                                 label="University/College"
                                 name="university"
-
-                                // // onChange={handleFormChange}
+                                onChange={handleChange}
                                 // value={form.university}
                             >
                                 <MenuItem value="None">None</MenuItem>
@@ -112,7 +120,12 @@ function HomeBanner() {
                         </FormControl>
                         <br />
 
-                        <CustomButton type="submit" background="secondary">
+                        <CustomButton
+                            type="submit"
+                            background="secondary"
+                            value={value}
+                            onClick={handleClick}
+                        >
                             <SearchIcon />
                             &nbsp; Search
                         </CustomButton>

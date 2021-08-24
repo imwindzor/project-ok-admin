@@ -32,8 +32,7 @@ class LoginController extends Controller
 
             $user = Auth::user();
             $type = $user->type;
-            $user = $type == "admin" ? Admin::where('_id', $user->admin_id)->first() :  AdminChed::where('_id', $user->adminched_id)->first();
-
+            $user = $type == "adminched" ?  AdminChed::where('_id', $user->adminched_id)->first() : Admin::where('_id', $user->admin_id)->first();
             return response()->json([
                 'success' => true,
                 '_id' => $user->_id,

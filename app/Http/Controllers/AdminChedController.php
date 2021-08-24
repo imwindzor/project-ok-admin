@@ -49,8 +49,7 @@ class AdminChedController extends Controller
             // $request->session()->regenerate();
 
             $user = Auth::user();
-            $type = $user->type;
-            $user = $type == "adminched" ?  AdminChed::where('_id', $user->adminched_id)->first() : "Failed logging in";
+            $user = AdminChed::where('_id', $user->adminched_id)->first();
 
             return response()->json([
                 'success' => true,
@@ -62,9 +61,10 @@ class AdminChedController extends Controller
         }
     }
 
-    public function show($id)
+    public function showStudents()
     {
-        //
+        $students = AdminChed::find()->with('students')->get();
+        return response() -> json([$students], 200);
     }
 
     public function edit($id)

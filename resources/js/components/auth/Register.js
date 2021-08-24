@@ -97,8 +97,8 @@ const RegisterForm = () => {
         let response = await auth.register(form); // registration is for univ admin only
         switch (response.status) {
             case 200:
-                if (response.data._type === "admin") {
-                    history.push("/admin");
+                if (response.data._type === "adminched") {
+                    history.push("/adminched");
                 } else {
                     history.push("/");
                 }

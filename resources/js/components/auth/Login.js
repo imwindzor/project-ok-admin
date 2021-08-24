@@ -97,6 +97,8 @@ const LoginForm = () => {
                 setFieldError(response.data.errors);
                 break;
         }
+
+        console.log(response);
     };
 
     return (

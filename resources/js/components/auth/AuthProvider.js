@@ -40,6 +40,7 @@ const useAuthProvider = () => {
 
                 localStorage.setItem("user", JSON.stringify(userData));
                 setUser(userData);
+                console.log(response);
             }
             return response;
         } catch (error) {
